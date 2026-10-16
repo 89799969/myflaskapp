@@ -81,6 +81,7 @@ pipeline {
                 bat '''
                     @echo off
                     for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":5000" ^| findstr "LISTENING"') do taskkill /F /PID %%a
+                    set JENKINS_NODE_COOKIE=survive-build
                     powershell -Command "Start-Process -FilePath '%PYTHON_PATH%' -ArgumentList 'app.py'"
                     ping -n 6 127.0.0.1 >nul
                     netstat -aon | findstr ":5000" | findstr "LISTENING" || (echo Deploy FAILED: app not listening & exit /b 1)
