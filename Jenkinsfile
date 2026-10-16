@@ -18,7 +18,9 @@ pipeline {
         }
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/89799969/myflaskapp.git', branch: 'main'
+                retry(5) {
+                    git url: 'git@github.com-jenkins:89799969/myflaskapp.git', branch: 'main'
+                }
             }
         }
         stage('Fix pip') {
