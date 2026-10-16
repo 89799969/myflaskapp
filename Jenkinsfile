@@ -81,7 +81,11 @@ pipeline {
                 bat '''
                     @echo off
                     for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":5000" ^| findstr "LISTENING"') do taskkill /F /PID %%a
-                    start "" "%PYTHON_PATH%" app.py
+                    set "PYEXE=%PYTHON_PATH:/=\%"
+                    start "flask-app" "%PYEXE%" app.py
+                    timeout /t 3 /nobreak >nul
+                    netstat -aon | findstr ":5000" | findstr "LISTENING" || (echo Deploy FAILED: app not listening & exit /b 1)
+                    echo App is listening on port 5000
                 '''
             }
         }
